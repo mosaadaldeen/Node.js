@@ -5,3 +5,6 @@ node_modules
 npm-debug.log
 yarn-error.log
 week1/build-with-students/modularization/step2-npm/package-lock.json
+week1/homework/2-left-pad/node_modules
+week1/homework/3-web-server/node_modules
+week1/homework/hackyourtemperature/node_modules
