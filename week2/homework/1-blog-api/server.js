@@ -12,7 +12,7 @@ let blogs = require('./blogs.json');
 console.log('blogs', blogs);
 
 app.post('/blogs', (req, res) => {
-    if (errorHandling(req, res)) {
+    if (postIsValid(req, res)) {
         res.status(400);
         res.send('invalid info');
         return;
@@ -29,14 +29,14 @@ app.post('/blogs', (req, res) => {
 });
 
 app.put('/blogs/:title', (req, res) => {
-    if (errorHandling(req, res)) {
+    if (postIsValid(req, res)) {
         res.status(400);
         res.send('invalid info');
         return;
     }
     if (fs.existsSync('./blogs.json')) {
         const blogToUpdate = blogs.find(blog => blog.title === req.params.title);
-        if (checkForItem(req, res, blogToUpdate)) {
+        if (checkForItem(blogToUpdate)) {
             res.status(404);
             res.send('no item found');
             return;
@@ -46,14 +46,13 @@ app.put('/blogs/:title', (req, res) => {
         fs.writeFileSync('./blogs.json', JSON.stringify(blogs));
         res.send(`Ok`);
     } else {
-        // Respond with message here
         console.log('This post does not exist!');
     }
 });
 
 app.delete('/blogs/:title', (req, res) => {
     const blogToDelete = blogs.find(blog => blog.title === req.params.title);
-    if (checkForItem(req, res, blogToDelete)) {
+    if (checkForItem(blogToDelete)) {
         res.status(404);
         res.send('no item found');
         return;
@@ -69,7 +68,7 @@ app.get('/blogs', (req, res) => {
     res.send(blogs);
 });
 
-function checkForItem(req, res, item) {
+function checkForItem(item) {
     if (typeof item === 'undefined') {
         return true;
     } else {
@@ -77,8 +76,7 @@ function checkForItem(req, res, item) {
     }
 }
 
-function errorHandling(req, res) {
-    // Error handling
+function postIsValid(req, res) {
     if (typeof req.body === "undefined" ||
         typeof req.body.title === "undefined" ||
         typeof req.body.content === "undefined") {
